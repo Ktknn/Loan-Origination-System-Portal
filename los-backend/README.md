@@ -8,8 +8,8 @@ Dịch vụ Backend cốt lõi trong hệ thống Loan Origination System (LOS),
 
 * **Xác thực & Phân quyền**: Đăng ký, đăng nhập an toàn bằng JWT (Access Token) kết hợp cơ chế xoay vòng Refresh Token tự động qua HttpOnly Cookie.
 * **Dịch vụ OTP Email**: Tự động khởi tạo và gửi mã xác thực bảo mật 6 chữ số qua Gmail SMTP TLS để khách hàng ký số hợp đồng vay.
-* **Chấm điểm tín dụng tự động (Credit Scoring)**: Đánh giá hồ sơ theo thang điểm.
-* **Đánh giá khả năng trả nợ (DTI)**: Tính toán chính xác tỷ lệ nợ trên thu nhập (Debt-to-Income).
+* **Chấm điểm tín dụng tự động (Credit Scoring)**: Đánh giá hồ sơ theo thang điểm ma trận chuẩn ngân hàng dựa trên nghề nghiệp, mức thu nhập và giới hạn độ tuổi.
+* **Đánh giá khả năng trả nợ (DTI)**: Tính toán chính xác tỷ lệ nợ trên thu nhập (Debt-to-Income $\le 60\%$) để đảm bảo an toàn tín dụng.
 * **Ra quyết định phê duyệt tức thì**: Tự động xét duyệt và gán trạng thái hồ sơ (`APPROVED` hoặc `REJECTED`) ngay sau khi khách hàng nộp đơn.
 * **Quản lý & Tra cứu hồ sơ**: Cung cấp RESTful API quản lý hồ sơ vay và cho phép tra cứu toàn bộ lịch sử nộp đơn theo số định danh CCCD.
 * **Bộ Unit Test hoàn chỉnh**: Tích hợp sẵn 63 unit test bao phủ toàn bộ các dịch vụ nghiệp vụ cốt lõi và các trường hợp biên (edge cases).
@@ -22,6 +22,7 @@ Dịch vụ Backend cốt lõi trong hệ thống Loan Origination System (LOS),
 * **Cơ sở dữ liệu & ORM**: MySQL 8.x, Spring Data JPA, Hibernate
 * **Bảo mật**: Spring Security 6, Nimbus JOSE JWT, BCrypt Password Encoder
 * **Dịch vụ Email**: Spring Boot Starter Mail (Gmail SMTP TLS)
+* **Kiểm thử & Build Tool**: JUnit 5, Mockito, Maven Wrapper (`mvnw`)
 
 ---
 
@@ -30,15 +31,22 @@ Dịch vụ Backend cốt lõi trong hệ thống Loan Origination System (LOS),
 ```text
 los-backend/
 ├── src/main/java/com/example/los/
-│   ├── controller/      # REST API Controllers (Auth, Loan, OTP, Assessment)
-│   ├── service/         # Nghiệp vụ: Thẩm định (Assessment), Vay (Loan), OTP, Email, Auth
-│   ├── entity/          # JPA Entities (User, LoanApplication, LoanProduct, Policy,...)
-│   ├── repository/      # Spring Data JPA Repositories
-│   ├── config/          # Spring Security, JWT Filter, CORS & Static Resource Forwarder
-│   └── exception/       # Global Exception Handler
-├── src/test/java/       # Unit Tests kiểm thử nghiệp vụ
-├── .env                 
-├── pom.xml             
+│   ├── controller/          # REST API Controllers (Auth, Loan, OTP, Assessment, GlobalExceptionHandler)
+│   ├── service/             # Nghiệp vụ: Thẩm định (Assessment), Vay (Loan), OTP, Email, Auth
+│   ├── entity/              # JPA Entities (User, LoanApplication, LoanProduct, Policy, RefreshToken)
+│   │   └── enums/           # Enum định nghĩa trạng thái hồ sơ, nghề nghiệp, khung thu nhập
+│   ├── dto/                 # Data Transfer Objects (auth, loan, otp, assessment)
+│   ├── repository/          # Spring Data JPA Repositories
+│   ├── security/            # Cấu hình Spring Security 6, JwtFilter, JwtUtils
+│   ├── config/              # Cấu hình ứng dụng (JwtProperties)
+│   └── LosApplication.java  # Điểm khởi chạy ứng dụng Spring Boot
+├── src/main/resources/
+│   ├── application.yml      # Cấu hình DataSource, JPA Hibernate, JWT, Mail SMTP
+│   └── static/              # Giao diện Portal đã đóng gói (All-in-One: index.html & assets/)
+├── src/test/java/           # Bộ 63 Unit Tests kiểm thử toàn diện các Service
+├── .env.example             # File mẫu cấu hình biến môi trường
+├── pom.xml                  # Quản lý thư viện và plugin Maven
+└── mvnw, mvnw.cmd           # Bộ công cụ Maven Wrapper
 ```
 
 ---
@@ -52,7 +60,7 @@ CREATE DATABASE IF NOT EXISTS los CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_
 ```
 
 ### 2. Cấu hình biến môi trường
-Tạo file `los-backend/.env`:
+Tạo file `los-backend/.env` (sao chép từ `.env.example`):
 ```env
 DB_URL=jdbc:mysql://localhost:3306/los?useSSL=false&serverTimezone=Asia/Ho_Chi_Minh&allowPublicKeyRetrieval=true
 DB_USERNAME=root
@@ -63,12 +71,16 @@ JWT_SECRET=chuoi_khoa_bi_mat_jwt_dai_tren_32_ky_tu_123456789
 JWT_EXPIRATION_MS=86400000
 ```
 
-### 3. Khởi chạy ứng dụng (Port 8080)
-```powershell
-# Chạy nhanh bằng script tự nạp .env
-cd los-backend
-.\run-demo.ps1
-```
+### 3. Khởi chạy Backend (Port 8080)
+* **Cách 1 (Từ thư mục gốc)**:
+  ```powershell
+  cd ..
+  .\run-demo.ps1
+  ```
+* **Cách 2 (Trực tiếp bằng Maven)**:
+  ```powershell
+  .\mvnw.cmd spring-boot:run
+  ```
 
 ### 4. Chạy Unit Test
 ```powershell
