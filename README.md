@@ -12,7 +12,7 @@ Hệ thống thẩm định và quản lý khoản vay trực tuyến toàn di�
 * **Ký hợp đồng bằng mã OTP**: Gửi mã xác thực 6 chữ số đến email người vay qua dịch vụ Gmail SMTP TLS để hoàn tất ký kết hồ sơ.
 * **Thẩm định tín dụng tự động (Underwriting Engine)**: Tự động chấm điểm hồ sơ theo ma trận nghề nghiệp/thu nhập và kiểm tra tỷ lệ nợ trên thu nhập để ra quyết định tức thì.
 * **Tra cứu hồ sơ thời gian thực**: Khách hàng tra cứu toàn bộ lịch sử khoản vay.
-* **Bảo mật chuẩn Ngân hàng**: Xác thực người dùng bằng Spring Security 6 và JWT, kết hợp cơ chế Access/Refresh Token an toàn qua HttpOnly Cookie.
+* **Bảo mật**: Xác thực người dùng bằng Spring Security 6 và JWT, kết hợp cơ chế Access/Refresh Token an toàn qua HttpOnly Cookie.
 
 ---
 
