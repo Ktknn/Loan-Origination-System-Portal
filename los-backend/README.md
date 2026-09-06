@@ -9,7 +9,7 @@ Dịch vụ Backend cốt lõi trong hệ thống Loan Origination System (LOS),
 * **Xác thực & Phân quyền**: Đăng ký, đăng nhập an toàn bằng JWT (Access Token) kết hợp cơ chế xoay vòng Refresh Token tự động qua HttpOnly Cookie.
 * **Dịch vụ OTP Email**: Tự động khởi tạo và gửi mã xác thực bảo mật 6 chữ số qua Gmail SMTP TLS để khách hàng ký số hợp đồng vay.
 * **Chấm điểm tín dụng tự động (Credit Scoring)**: Đánh giá hồ sơ theo thang điểm ma trận chuẩn ngân hàng dựa trên nghề nghiệp, mức thu nhập và giới hạn độ tuổi.
-* **Đánh giá khả năng trả nợ (DTI)**: Tính toán chính xác tỷ lệ nợ trên thu nhập (Debt-to-Income $\le 60\%$) để đảm bảo an toàn tín dụng.
+* **Đánh giá khả năng trả nợ (DTI)**: Tính toán tỷ lệ nợ trên thu nhập.
 * **Ra quyết định phê duyệt tức thì**: Tự động xét duyệt và gán trạng thái hồ sơ (`APPROVED` hoặc `REJECTED`) ngay sau khi khách hàng nộp đơn.
 * **Quản lý & Tra cứu hồ sơ**: Cung cấp RESTful API quản lý hồ sơ vay và cho phép tra cứu toàn bộ lịch sử nộp đơn theo số định danh CCCD.
 * **Bộ Unit Test hoàn chỉnh**: Tích hợp sẵn 63 unit test bao phủ toàn bộ các dịch vụ nghiệp vụ cốt lõi và các trường hợp biên (edge cases).
