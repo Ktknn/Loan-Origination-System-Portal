@@ -1,0 +1,8 @@
+{
+  "name": "Loan Origination System",
+  "description": "Loan Origination System is a CRM client for managing loan applications.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

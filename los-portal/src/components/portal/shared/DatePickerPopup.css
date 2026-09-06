@@ -1,0 +1,167 @@
+/* =============================================
+   react-calendar custom skin — matches screenshot design
+   ============================================= */
+
+.dob-picker-wrapper {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f1f5f9;
+  padding: 16px;
+  width: 280px;
+}
+
+/* ---- Reset the default calendar shell ---- */
+.dob-picker-wrapper .react-calendar {
+  border: none;
+  border-radius: 0;
+  font-family: inherit;
+  width: 100%;
+  background: transparent;
+  line-height: 1;
+}
+
+/* ---- Navigation header (Month Year < >) ---- */
+.dob-picker-wrapper .react-calendar__navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  height: auto;
+}
+
+.dob-picker-wrapper .react-calendar__navigation__label {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  order: -1;
+  flex-grow: 1;
+  text-align: left;
+}
+
+.dob-picker-wrapper .react-calendar__navigation__label:hover,
+.dob-picker-wrapper .react-calendar__navigation__label:focus {
+  background: none;
+}
+
+/* Hide prev2 / next2 buttons (year jump) */
+.dob-picker-wrapper .react-calendar__navigation__prev2-button,
+.dob-picker-wrapper .react-calendar__navigation__next2-button {
+  display: none;
+}
+
+/* Arrow buttons */
+.dob-picker-wrapper .react-calendar__navigation__prev-button,
+.dob-picker-wrapper .react-calendar__navigation__next-button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #94a3b8;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+
+.dob-picker-wrapper .react-calendar__navigation__prev-button:hover,
+.dob-picker-wrapper .react-calendar__navigation__next-button:hover {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+/* ---- Weekday headers (SU MO TU…) ---- */
+.dob-picker-wrapper .react-calendar__month-view__weekdays {
+  margin-bottom: 4px;
+}
+
+.dob-picker-wrapper .react-calendar__month-view__weekdays__weekday {
+  text-align: center;
+  padding: 4px 0;
+}
+
+.dob-picker-wrapper .react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
+  letter-spacing: 0.03em;
+}
+
+/* ---- Day tiles ---- */
+.dob-picker-wrapper .react-calendar__tile {
+  background: none;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 13px;
+  font-weight: 400;
+  color: #374151;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+  padding: 0;
+  margin: 1px auto;
+  max-width: 36px;
+}
+
+.dob-picker-wrapper .react-calendar__tile:hover:not(:disabled) {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+/* Today */
+.dob-picker-wrapper .react-calendar__tile--now {
+  background: none;
+  color: #2563eb;
+  font-weight: 700;
+}
+
+.dob-picker-wrapper .react-calendar__tile--now:hover {
+  background: #eff6ff;
+}
+
+/* Selected */
+.dob-picker-wrapper .react-calendar__tile--active,
+.dob-picker-wrapper .react-calendar__tile--active:focus {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  font-weight: 700;
+}
+
+.dob-picker-wrapper .react-calendar__tile--active:hover {
+  background: #1d4ed8 !important;
+}
+
+/* Disabled (future) */
+.dob-picker-wrapper .react-calendar__tile:disabled {
+  color: #cbd5e1;
+  cursor: default;
+}
+
+/* ---- Neighboring-month days (faded) ---- */
+.dob-picker-wrapper .react-calendar__month-view__days__day--neighboringMonth {
+  color: #cbd5e1;
+}
+
+/* ---- Year / decade views ---- */
+.dob-picker-wrapper .react-calendar__year-view__months__month,
+.dob-picker-wrapper .react-calendar__decade-view__years__year,
+.dob-picker-wrapper .react-calendar__century-view__decades__decade {
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  padding: 10px 4px;
+}

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loan Origination System Portal</title>
+    <!-- Safeguard window.fetch if a library tries to assign a custom value in sandboxed environments -->
+    <script>
+      (function() {
+        try {
+          var originalFetch = window.fetch;
+          var patched = false;
+          var currentObj = window;
+          while (currentObj) {
+            var desc = Object.getOwnPropertyDescriptor(currentObj, 'fetch');
+            if (desc) {
+              if (desc.configurable) {
+                Object.defineProperty(currentObj, 'fetch', {
+                  get: function() { return originalFetch; },
+                  set: function(v) { originalFetch = v; },
+                  configurable: true,
+                  enumerable: true
+                });
+                patched = true;
+                break;
+              }
+            }
+            currentObj = Object.getPrototypeOf(currentObj);
+          }
+          if (!patched) {
+            Object.defineProperty(window, 'fetch', {
+              get: function() { return originalFetch; },
+              set: function(v) { originalFetch = v; },
+              configurable: true,
+              enumerable: true
+            });
+          }
+        } catch (e) {
+          console.warn("Unable to intercept/redirect window.fetch setting:", e);
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

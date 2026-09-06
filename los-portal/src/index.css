@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+@theme {
+  --animate-hover-spin: hover-spin 8s linear infinite;
+}
+
+@keyframes hover-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Scrollbar aesthetic customization matching SLDS */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  height: 5px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #dddbda;
+  border-radius: 4px;
+}
+
+/* Subtle pulse animation for visual builder launcher guide */
+.anim-pulse {
+  animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: .7;
+    transform: scale(1.06);
+  }
+}
+
+/* SF DC Arrow progress steps styling */
+.clip-chevron {
+  clip-path: polygon(100% 0%, 93% 50%, 100% 100%, 0% 100%, 7% 50%, 0% 0%);
+}
+
+/* Loan amount slider – pink thumb */
+input[type='range'].loan-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid #2563eb;
+  cursor: pointer;
+  box-shadow: 0 1px 6px rgba(37, 99, 235, 0.25);
+  margin-top: -9px;
+}
+input[type='range'].loan-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid #2563eb;
+  cursor: pointer;
+  box-shadow: 0 1px 6px rgba(37, 99, 235, 0.25);
+}
+input[type='range'].loan-slider::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 9999px;
+}
+input[type='range'].loan-slider::-moz-range-track {
+  height: 4px;
+  border-radius: 9999px;
+  background: #bfdbfe;
+}
+input[type='range'].loan-slider:focus {
+  outline: none;
+}
+
