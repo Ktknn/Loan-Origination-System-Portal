@@ -32,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LoanController {
 
-    private final LoanService loanService; // I: chỉ inject LoanService, không inject gì thừa
+    private final LoanService loanService;
 
     /**
      * POST /api/v1/portal/submit
