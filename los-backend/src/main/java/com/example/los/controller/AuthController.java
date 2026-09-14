@@ -92,10 +92,10 @@ public class AuthController {
     private ResponseCookie buildRefreshCookie(String value, long maxAge) {
         return ResponseCookie.from(REFRESH_COOKIE, value != null ? value : "")
                 .httpOnly(true)
-                .secure(false)
+                .secure(true)           // bắt buộc khi SameSite=None
                 .path("/api/v1/auth/refresh")
                 .maxAge(maxAge)
-                .sameSite("Strict")
+                .sameSite("None")       // cho phép cross-site (Vercel → Render)
                 .build();
     }
 }
