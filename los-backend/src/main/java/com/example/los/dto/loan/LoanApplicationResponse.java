@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.Data;
 
+import com.example.los.entity.LoanApplication;
+
 @Data
 public class LoanApplicationResponse {
     // Loan Application Info
@@ -44,7 +46,7 @@ public class LoanApplicationResponse {
     private LocalDateTime updatedAt;
 
     /** Convert từ LoanApplication entity → Response DTO */
-    public static LoanApplicationResponse from(com.example.los.entity.LoanApplication app) {
+    public static LoanApplicationResponse from(LoanApplication app) {
         LoanApplicationResponse res = new LoanApplicationResponse();
         res.setLoanApplicationId(app.getLoanApplicationId());
         res.setUserId(app.getUser() != null ? app.getUser().getUserId() : null);
