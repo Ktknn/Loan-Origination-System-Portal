@@ -44,9 +44,6 @@ los-backend/
 │   ├── application.yml      # Cấu hình DataSource, JPA Hibernate, JWT, Mail SMTP
 │   └── static/              # Giao diện Portal đã đóng gói (All-in-One: index.html & assets/)
 ├── src/test/java/           # Bộ 63 Unit Tests kiểm thử toàn diện các Service
-├── .env.example             # File mẫu cấu hình biến môi trường
-├── pom.xml                  # Quản lý thư viện và plugin Maven
-└── mvnw, mvnw.cmd           # Bộ công cụ Maven Wrapper
 ```
 
 ---
