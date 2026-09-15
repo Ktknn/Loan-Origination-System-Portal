@@ -91,9 +91,9 @@ public class LoanService {
                 .amount(amount)
                 .term(req.getTerm())
                 .approveInterestRate(rate)
-                .purpose(LoanPurpose.fromLabel(req.getPurpose()))
-                .incomeRange(IncomeRange.fromLabel(req.getIncomeRange()))
-                .occupation(Occupation.fromLabel(req.getOccupation()))
+                .purpose(safeEnum(LoanPurpose.class, req.getPurpose(), LoanPurpose.VAY_TIEU_DUNG_KHAC))
+                .incomeRange(safeEnum(IncomeRange.class, req.getIncomeRange(), IncomeRange.DUOI_10_TRIEU))
+                .occupation(safeEnum(Occupation.class, req.getOccupation(), Occupation.KHAC))
                 .referenceContactName1(req.getRef1Name())
                 .referenceContactPhone1(req.getRef1Phone())
                 .referenceContactName2(req.getRef2Name())
@@ -204,5 +204,16 @@ public class LoanService {
 
         String key = amount.longValue() + "_" + term;
         return rates.getOrDefault(key, 5.0); // fallback 5% nếu không có trong matrix
+    }
+
+    /** Parse enum by name (case-insensitive). Returns defaultVal if null or unknown. */
+    private <E extends Enum<E>> E safeEnum(Class<E> cls, String name, E defaultVal) {
+        if (name == null || name.isBlank()) return defaultVal;
+        try {
+            return Enum.valueOf(cls, name.trim().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            log.warn("[LoanService] Unknown enum value '{}' for {}, using default {}", name, cls.getSimpleName(), defaultVal);
+            return defaultVal;
+        }
     }
 }

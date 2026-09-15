@@ -114,6 +114,33 @@ const formatDate = (dateStr: string): string => {
   return dateStr;
 };
 
+// Map enum name → label tiếng Việt (dùng cho phần review)
+const ENUM_LABELS: Record<string, string> = {
+  // Gender
+  Nam: 'Nam', Nu: 'Nữ',
+  // IncomeRange
+  DUOI_10_TRIEU: 'Dưới 10 triệu',
+  TU_10_DEN_20_TRIEU: '10 - 20 triệu',
+  TU_20_DEN_30_TRIEU: '20 - 30 triệu',
+  TREN_30_TRIEU: 'Trên 30 triệu',
+  // LoanPurpose
+  MUA_PHUONG_TIEN: 'Mua phương tiện đi lại',
+  MUA_SAM_DO_DUNG: 'Mua sắm đồ dùng sinh hoạt',
+  HOC_TAP: 'Học tập',
+  CHUA_BENH: 'Chữa bệnh',
+  DU_LICH: 'Du lịch',
+  VAY_TIEU_DUNG_KHAC: 'Tiêu dùng khác',
+  // Occupation
+  CAN_BO_CONG_CHUC: 'Cán bộ / Công chức',
+  HUU_TRI: 'Hưu trí',
+  SINH_VIEN: 'Sinh viên',
+  KINH_DOANH_TU_DO: 'Kinh doanh tự do',
+  NHAN_VIEN_CONG_TY: 'Nhân viên công ty',
+  KHAC: 'Khác',
+};
+const label = (val: string) => ENUM_LABELS[val] ?? val;
+
+
 // =============================================
 // CONTRACT DOCUMENT (A + B)
 // =============================================
@@ -143,13 +170,13 @@ const ContractDocument = ({ formData, interestRate }: { formData: FormData, inte
             <p className="pl-6">1.3. Số điện thoại: {formData.phone}</p>
             <p className="pl-6">1.4. CCCD/CMND: {formData.cccd}</p>
             <p className="pl-6">1.5. Email liên hệ: {formData.email}</p>
-            <p className="pl-6">1.6. Nghề nghiệp: {formData.occupation}</p>
+            <p className="pl-6">1.6. Nghề nghiệp: {label(formData.occupation)}</p>
             <p className="pl-6">1.7. Địa chỉ thường trú: {formData.address}, {formData.ward}, {formData.district}, {formData.city}</p>
           </div>
           <div className="space-y-1.5">
             <p className="font-semibold pl-2">2. Đề nghị vay vốn</p>
             <p className="pl-6">2.1. Số tiền đề nghị vay: <span className="font-bold">{formData.amount.replace(/\s*(VND|VNĐ)/gi, '')} VNĐ</span></p>
-            <p className="pl-6">2.2. Mục đích vay: {formData.purpose}</p>
+            <p className="pl-6">2.2. Mục đích vay: {label(formData.purpose)}</p>
             <p className="pl-6">2.3. Thời hạn vay: <span className="font-semibold">{formData.term} tháng</span></p>
           </div>
         </div>
@@ -188,7 +215,7 @@ const ContractDocument = ({ formData, interestRate }: { formData: FormData, inte
           <p className="pl-4">1. Số tiền vay: <span className="font-bold">{formData.amount.replace(/\s*(VND|VNĐ)/gi, '')} VNĐ</span></p>
           <p className="pl-4">2. Lãi suất: <span className="font-semibold">{interestRate.toString().replace('.', ',')}%/tháng</span> tính trên dư nợ giảm dần.</p>
           <p className="pl-4">3. Thời hạn: <span className="font-semibold">{formData.term} tháng</span> kể từ ngày giải ngân.</p>
-          <p className="pl-4">4. Mục đích: {formData.purpose}.</p>
+          <p className="pl-4">4. Mục đích: {label(formData.purpose)}.</p>
           <p className="pl-4">5. Đồng tiền cho vay: <span className="font-semibold">Việt Nam Đồng (VNĐ)</span>.</p>
         </div>
 
@@ -424,12 +451,12 @@ export const ApplicationPage = ({ formData, setFormData, setCurrentView }: Appli
                   <label className="text-xs font-medium text-slate-700 mb-1 block">Mục đích vay <span className="text-red-500">*</span></label>
                   <select value={formData.purpose} onChange={e => handleChange('purpose', e.target.value)} className={inputCls('purpose')}>
                     <option value="">Chọn mục đích</option>
-                    <option>Mua phương tiện đi lại</option>
-                    <option>Mua sắm đồ dùng sinh hoạt gia đình</option>
-                    <option>Học tập</option>
-                    <option>Chữa bệnh</option>
-                    <option>Du lịch</option>
-                    <option>Tiêu dùng khác</option>
+                    <option value="MUA_PHUONG_TIEN">Mua phương tiện đi lại</option>
+                    <option value="MUA_SAM_DO_DUNG">Mua sắm đồ dùng sinh hoạt gia đình</option>
+                    <option value="HOC_TAP">Học tập</option>
+                    <option value="CHUA_BENH">Chữa bệnh</option>
+                    <option value="DU_LICH">Du lịch</option>
+                    <option value="VAY_TIEU_DUNG_KHAC">Tiêu dùng khác</option>
                   </select>
                   {errors.purpose && <p className="text-red-500 text-[10px] mt-1 font-medium">{errors.purpose}</p>}
                 </div>
@@ -520,7 +547,7 @@ export const ApplicationPage = ({ formData, setFormData, setCurrentView }: Appli
                         <input type="radio" name="gender" checked={formData.gender === 'Nam'} onChange={() => handleChange('gender', 'Nam')} className="w-4 h-4 accent-blue-600" /> Nam
                       </label>
                       <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
-                        <input type="radio" name="gender" checked={formData.gender === 'Nữ'} onChange={() => handleChange('gender', 'Nữ')} className="w-4 h-4 accent-blue-600" /> Nữ
+                        <input type="radio" name="gender" checked={formData.gender === 'Nu'} onChange={() => handleChange('gender', 'Nu')} className="w-4 h-4 accent-blue-600" /> Nữ
                       </label>
                     </div>
                   </div>
@@ -564,12 +591,12 @@ export const ApplicationPage = ({ formData, setFormData, setCurrentView }: Appli
                   <label className="text-xs font-medium text-slate-700 mb-1 block">Nghề nghiệp <span className="text-red-500">*</span></label>
                   <select value={formData.occupation} onChange={e => handleChange('occupation', e.target.value)} className={inputCls('occupation')}>
                     <option value="">Chọn nghề nghiệp</option>
-                    <option>Cán bộ / Công chức</option>
-                    <option>Hưu trí</option>
-                    <option>Sinh viên</option>
-                    <option>Kinh doanh tự do</option>
-                    <option>Nhân viên công ty</option>
-                    <option>Khác</option>
+                    <option value="CAN_BO_CONG_CHUC">Cán bộ / Công chức</option>
+                    <option value="HUU_TRI">Hưu trí</option>
+                    <option value="SINH_VIEN">Sinh viên</option>
+                    <option value="KINH_DOANH_TU_DO">Kinh doanh tự do</option>
+                    <option value="NHAN_VIEN_CONG_TY">Nhân viên công ty</option>
+                    <option value="KHAC">Khác</option>
                   </select>
                   {errors.occupation && <p className="text-red-500 text-[10px] mt-0.5 font-medium">{errors.occupation}</p>}
                 </div>
@@ -577,11 +604,10 @@ export const ApplicationPage = ({ formData, setFormData, setCurrentView }: Appli
                   <label className="text-xs font-medium text-slate-700 mb-1 block">Thu nhập hằng tháng <span className="text-red-500">*</span></label>
                   <select value={formData.income} onChange={e => handleChange('income', e.target.value)} className={inputCls('income')}>
                     <option value="">Chọn mức thu nhập</option>
-                    <option>Dưới 10 triệu</option>
-                    <option>10 - 20 triệu</option>
-                    <option>20 - 50 triệu</option>
-                    <option>50 - 100 triệu</option>
-                    <option>Trên 100 triệu</option>
+                    <option value="DUOI_10_TRIEU">Dưới 10 triệu</option>
+                    <option value="TU_10_DEN_20_TRIEU">10 - 20 triệu</option>
+                    <option value="TU_20_DEN_30_TRIEU">20 - 30 triệu</option>
+                    <option value="TREN_30_TRIEU">Trên 30 triệu</option>
                   </select>
                   {errors.income && <p className="text-red-500 text-[10px] mt-0.5 font-medium">{errors.income}</p>}
                 </div>
@@ -642,7 +668,7 @@ export const ApplicationPage = ({ formData, setFormData, setCurrentView }: Appli
                 <div className="flex justify-between text-sm"><span className="text-slate-500">Số tiền đề nghị</span><span className="font-semibold text-slate-800">{formData.amount.replace(/\s*(VND|VNĐ)/gi, '')} VNĐ</span></div>
                 <div className="flex justify-between text-sm"><span className="text-slate-500">Thời gian vay</span><span className="font-semibold text-slate-800">{formData.term} tháng</span></div>
                 <div className="flex justify-between text-sm"><span className="text-slate-500">Lãi suất</span><span className="font-semibold text-slate-800">{interestRate}%/tháng</span></div>
-                <div className="flex justify-between text-sm"><span className="text-slate-500">Mục đích</span><span className="font-medium text-slate-800 text-right max-w-[60%]">{formData.purpose}</span></div>
+                <div className="flex justify-between text-sm"><span className="text-slate-500">Mục đích</span><span className="font-medium text-slate-800 text-right max-w-[60%]">{label(formData.purpose)}</span></div>
                 <div className="border-t border-slate-100 pt-3 flex justify-between text-sm"><span className="font-medium text-slate-600">Tạm tính trả/tháng</span><span className="font-bold text-blue-600">~{formattedPayment}</span></div>
               </div>
             </div>
@@ -653,7 +679,7 @@ export const ApplicationPage = ({ formData, setFormData, setCurrentView }: Appli
               <div className="p-5 space-y-3">
                 <div className="flex justify-between text-sm"><span className="text-slate-500">Họ và tên</span><span className="font-semibold text-slate-800">{formData.fullName}</span></div>
                 <div className="flex justify-between text-sm"><span className="text-slate-500">Ngày sinh</span><span className="font-medium text-slate-800">{formatDate(formData.dob)}</span></div>
-                <div className="flex justify-between text-sm"><span className="text-slate-500">Giới tính</span><span className="font-medium text-slate-800">{formData.gender}</span></div>
+                <div className="flex justify-between text-sm"><span className="text-slate-500">Giới tính</span><span className="font-medium text-slate-800">{label(formData.gender)}</span></div>
                 <div className="flex justify-between text-sm"><span className="text-slate-500">CCCD/CMND</span><span className="font-medium text-slate-800">{formData.cccd}</span></div>
                 <div className="flex justify-between text-sm"><span className="text-slate-500">Số điện thoại</span><span className="font-medium text-slate-800">{formData.phone}</span></div>
                 <div className="flex justify-between text-sm"><span className="text-slate-500">Email</span><span className="font-medium text-slate-800 truncate max-w-[60%]">{formData.email}</span></div>
@@ -665,8 +691,8 @@ export const ApplicationPage = ({ formData, setFormData, setCurrentView }: Appli
                 <h2 className="font-semibold text-slate-800 text-sm">3. Thu nhập & Công việc</h2>
               </div>
               <div className="p-5 space-y-3">
-                <div className="flex justify-between text-sm"><span className="text-slate-500">Nghề nghiệp</span><span className="font-medium text-slate-800">{formData.occupation}</span></div>
-                <div className="flex justify-between text-sm"><span className="text-slate-500">Thu nhập</span><span className="font-medium text-emerald-600">{formData.income}</span></div>
+                <div className="flex justify-between text-sm"><span className="text-slate-500">Nghề nghiệp</span><span className="font-medium text-slate-800">{label(formData.occupation)}</span></div>
+                <div className="flex justify-between text-sm"><span className="text-slate-500">Thu nhập</span><span className="font-medium text-emerald-600">{label(formData.income)}</span></div>
               </div>
             </div>
             <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">

@@ -7,10 +7,10 @@
 -- ============================================================
 DROP TABLE IF EXISTS application_assessment CASCADE;
 DROP TABLE IF EXISTS otp CASCADE;
-DROP TABLE IF EXISTS "Loan_Applications" CASCADE;
-DROP TABLE IF EXISTS "Loan_Products" CASCADE;
+DROP TABLE IF EXISTS loan_applications CASCADE;
+DROP TABLE IF EXISTS loan_products CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
-DROP TABLE IF EXISTS policy CASCADE;
+DROP TABLE IF EXISTS policies CASCADE;
 DROP TABLE IF EXISTS refresh_tokens CASCADE;
 
 -- ============================================================
@@ -22,7 +22,7 @@ CREATE TABLE users (
     gender          VARCHAR(10)     CHECK (gender IN ('Nam','Nu')),
     cccd            VARCHAR(12)     UNIQUE,
     email           VARCHAR(255)    UNIQUE,
-    "passwordHash"  VARCHAR(255),
+    passwordHash  VARCHAR(255),
     phone_number    VARCHAR(20),
     birthdate       DATE,
     address         VARCHAR(255),
@@ -37,10 +37,10 @@ CREATE TABLE users (
 -- ============================================================
 -- 2. Loan_Products
 -- ============================================================
-CREATE TABLE "Loan_Products" (
+CREATE TABLE loan_products (
     loan_product_id VARCHAR(36)     NOT NULL PRIMARY KEY,
     name            VARCHAR(255),
-    amount          DECIMAL(10, 2),
+    amount          DECIMAL(15, 2),
     term            INT,
     interest_rate   DECIMAL(10, 2),
     status          VARCHAR(20)     DEFAULT 'active',
@@ -51,11 +51,11 @@ CREATE TABLE "Loan_Products" (
 -- ============================================================
 -- 3. Loan_Applications
 -- ============================================================
-CREATE TABLE "Loan_Applications" (
+CREATE TABLE loan_applications (
     loan_application_id         VARCHAR(36)     NOT NULL PRIMARY KEY,
     user_id                     VARCHAR(36)     NOT NULL,
     loan_product_id             VARCHAR(36),
-    amount                      DECIMAL(10, 2),
+    amount                      DECIMAL(15, 2),
     term                        INT,
     approve_interest_rate       DECIMAL(10, 2),
     purpose                     VARCHAR(50)     DEFAULT 'VAY_TIEU_DUNG_KHAC',
@@ -71,7 +71,7 @@ CREATE TABLE "Loan_Applications" (
     created_at                  TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,
     updated_at                  TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_loan_app_user    FOREIGN KEY (user_id)         REFERENCES users(user_id),
-    CONSTRAINT fk_loan_app_product FOREIGN KEY (loan_product_id) REFERENCES "Loan_Products"(loan_product_id)
+    CONSTRAINT fk_loan_app_product FOREIGN KEY (loan_product_id) REFERENCES loan_products(loan_product_id)
 );
 
 -- ============================================================
@@ -89,7 +89,7 @@ CREATE TABLE application_assessment (
     status                  VARCHAR(20)     DEFAULT 'PENDING',
     created_at              TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,
     updated_at              TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_assessment_loan_app FOREIGN KEY (loan_application_id) REFERENCES "Loan_Applications"(loan_application_id)
+    CONSTRAINT fk_assessment_loan_app FOREIGN KEY (loan_application_id) REFERENCES loan_applications(loan_application_id)
 );
 
 -- ============================================================
@@ -112,7 +112,7 @@ CREATE TABLE otp (
 -- ============================================================
 -- 6. policy
 -- ============================================================
-CREATE TABLE policy (
+CREATE TABLE policies (
     policy_id                   VARCHAR(36)     NOT NULL PRIMARY KEY,
     policy_name                 VARCHAR(255),
     max_loan_amount             DECIMAL(15, 2),
