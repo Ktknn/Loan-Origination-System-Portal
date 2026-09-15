@@ -13,10 +13,10 @@ USE `los`;
 -- ============================================================
 DROP TABLE IF EXISTS `application_assessment`;
 DROP TABLE IF EXISTS `otp`;
-DROP TABLE IF EXISTS `Loan_Applications`;
-DROP TABLE IF EXISTS `Loan_Products`;
+DROP TABLE IF EXISTS `loan_applications`;
+DROP TABLE IF EXISTS `loan_products`;
 DROP TABLE IF EXISTS `users`;
-DROP TABLE IF EXISTS `policy`;
+DROP TABLE IF EXISTS `policies`;
 
 -- ============================================================
 -- 1. users  (entity: User.java)
@@ -42,10 +42,10 @@ CREATE TABLE `users` (
 -- ============================================================
 -- 2. Loan_Products  (entity: LoanProduct.java)
 -- ============================================================
-CREATE TABLE `Loan_Products` (
+CREATE TABLE `loan_products` (
     `loan_product_id`   VARCHAR(36)     NOT NULL PRIMARY KEY,
     `name`              VARCHAR(255),
-    `amount`            DECIMAL(10, 2),
+    `amount`            DECIMAL(15, 2),
     `term`              INT,
     `interest_rate`     DECIMAL(10, 2),
     `status`            VARCHAR(20)     DEFAULT 'active',
@@ -56,11 +56,11 @@ CREATE TABLE `Loan_Products` (
 -- ============================================================
 -- 3. Loan_Applications  (entity: LoanApplication.java)
 -- ============================================================
-CREATE TABLE `Loan_Applications` (
+CREATE TABLE `loan_applications` (
     `loan_application_id`       VARCHAR(36)     NOT NULL PRIMARY KEY,
     `user_id`                   VARCHAR(36)     NOT NULL,
     `loan_product_id`           VARCHAR(36),
-    `amount`                    DECIMAL(10, 2),
+    `amount`                    DECIMAL(15, 2),
     `term`                      INT,
     `approve_interest_rate`     DECIMAL(10, 2),
     `purpose`                   ENUM(

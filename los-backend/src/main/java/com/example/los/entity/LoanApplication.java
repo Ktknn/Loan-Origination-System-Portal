@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Loan_Applications")
+@Table(name = "loan_applications")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class LoanApplication {
 

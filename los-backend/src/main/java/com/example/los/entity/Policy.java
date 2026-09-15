@@ -19,7 +19,7 @@ import lombok.Setter;
 
 
 @Entity
-@Table(name = "policy")
+@Table(name = "policies")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Policy {
 
