@@ -1,5 +1,11 @@
 {
+  "build": {
+    "env": {
+      "VITE_API_URL": "https://loan-origination-system-portal-2.onrender.com"
+    }
+  },
   "rewrites": [
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }
+
