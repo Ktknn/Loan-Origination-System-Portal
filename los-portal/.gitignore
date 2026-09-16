@@ -36,6 +36,7 @@ out/
 .env.production.local
 .env*
 !.env.example
+!.env.production
 
 # OS files
 .DS_Store
