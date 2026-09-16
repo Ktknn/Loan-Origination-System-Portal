@@ -20,23 +20,3 @@ RUN ./mvnw dependency:go-offline -q
 # Copy source và build JAR
 COPY src ./src
 RUN ./mvnw package -DskipTests -q
-
-# ─── Stage 2: Runtime ────────────────────────────────────────────────────────
-FROM eclipse-temurin:21-jre-alpine
-
-WORKDIR /app
-
-# Non-root user (security best practice)
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-USER appuser
-
-COPY --from=build /app/target/*.jar app.jar
-
-EXPOSE 8080
-
-# UseContainerSupport: JVM tự detect RAM limit của container
-# MaxRAMPercentage: dùng tối đa 75% RAM container (còn lại cho OS + metaspace)
-ENTRYPOINT ["java", \
-  "-XX:+UseContainerSupport", \
-  "-XX:MaxRAMPercentage=75.0", \
-  "-jar", "app.jar"]
