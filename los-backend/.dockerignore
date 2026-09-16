@@ -1,0 +1,19 @@
+# Build output (sẽ được tạo trong container)
+target/
+
+# Secrets — KHÔNG bao giờ copy vào image
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Frontend static đã build (không cần khi deploy backend only)
+src/main/resources/static/
+
+# Git
+.git/
+.gitignore

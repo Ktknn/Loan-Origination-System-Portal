@@ -1,0 +1,28 @@
+# ── Git & IDE ─────────────────────────────────────────────────
+.git
+.gitignore
+.gitattributes
+**/.vscode
+**/.idea
+**/*.iml
+
+# ── Secrets (KHÔNG bao giờ copy vào image) ───────────────────
+**/.env
+**/.env.local
+**/.env.*.local
+
+# ── Node.js ───────────────────────────────────────────────────
+los-portal/node_modules
+los-portal/dist
+
+# ── Maven build output ────────────────────────────────────────
+los-backend/target
+
+# ── Spring Boot static đã build (stage build sẽ tự copy) ─────
+los-backend/src/main/resources/static
+
+# ── Docs / misc ───────────────────────────────────────────────
+*.md
+MySQL/
+docs/
+*.ps1
