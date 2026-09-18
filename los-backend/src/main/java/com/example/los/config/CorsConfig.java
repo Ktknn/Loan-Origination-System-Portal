@@ -8,8 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import jakarta.annotation.PostConstruct;
 
@@ -26,25 +29,32 @@ public class CorsConfig {
         log.info(">>> CORS Allowed Origins configured: [{}]", allowedOrigins);
     }
 
+    /**
+     * Register a CorsFilter with HIGHEST precedence — runs before Spring Security.
+     * This bypasses all Spring Security CORS handling and ensures preflight OPTIONS
+     * requests are responded to with CORS headers before reaching any security filter.
+     */
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    public CorsFilter corsFilter() {
         List<String> origins = Arrays.stream(allowedOrigins.split(","))
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
                 .toList();
 
-        log.info(">>> CORS Origin patterns list: {}", origins);
+        log.info(">>> CORS Filter origins: {}", origins);
 
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(origins);
+        config.setAllowedOrigins(origins);          // exact match
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("Authorization", "Content-Type"));
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
 
-        // Use a lambda instead of UrlBasedCorsConfigurationSource to bypass
-        // path-matching entirely — returns the same config for every request
-        return request -> config;
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+
+        return new CorsFilter(source);
     }
 }
