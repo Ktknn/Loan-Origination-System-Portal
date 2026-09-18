@@ -6,10 +6,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -26,26 +26,25 @@ public class CorsConfig {
 
     @PostConstruct
     public void logCorsConfig() {
-        log.info(">>> CORS Allowed Origins configured: [{}]", allowedOrigins);
+        log.info(">>> CORS Allowed Origins: [{}]", allowedOrigins);
     }
 
     /**
-     * Register a CorsFilter with HIGHEST precedence — runs before Spring Security.
-     * This bypasses all Spring Security CORS handling and ensures preflight OPTIONS
-     * requests are responded to with CORS headers before reaching any security filter.
+     * FilterRegistrationBean explicitly overrides CorsFilter's own LOWEST_PRECEDENCE
+     * order (from GenericFilterBean). Without this wrapper, @Order on @Bean is ignored
+     * because Spring Boot uses the filter's own getOrder() method.
      */
     @Bean
-    @Order(Ordered.HIGHEST_PRECEDENCE)
-    public CorsFilter corsFilter() {
+    public FilterRegistrationBean<CorsFilter> corsFilterRegistration() {
         List<String> origins = Arrays.stream(allowedOrigins.split(","))
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
                 .toList();
 
-        log.info(">>> CORS Filter origins: {}", origins);
+        log.info(">>> CORS FilterRegistrationBean origins: {}", origins);
 
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(origins);          // exact match
+        config.setAllowedOrigins(origins);
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("Authorization", "Content-Type"));
@@ -55,6 +54,9 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
 
-        return new CorsFilter(source);
+        FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
+        // HIGHEST_PRECEDENCE ensures this runs before Spring Security's DelegatingFilterProxy
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return bean;
     }
 }
