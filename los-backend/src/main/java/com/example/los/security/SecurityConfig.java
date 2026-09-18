@@ -2,24 +2,28 @@ package com.example.los.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
+    private final CorsConfigurationSource corsConfigurationSource;
 
-    public SecurityConfig(JwtFilter jwtFilter) {
+    public SecurityConfig(JwtFilter jwtFilter, CorsConfigurationSource corsConfigurationSource) {
         this.jwtFilter = jwtFilter;
+        this.corsConfigurationSource = corsConfigurationSource;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors(Customizer.withDefaults())      // ← delegate CORS sang CorsConfig (WebMvcConfigurer)
+            // Explicitly wire our CorsConfigurationSource bean — no auto-discovery ambiguity
+            .cors(cors -> cors.configurationSource(corsConfigurationSource))
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
             .httpBasic(basic -> basic.disable())
@@ -32,6 +36,8 @@ public class SecurityConfig {
                 })
             )
             .authorizeHttpRequests(auth -> auth
+                // Allow all CORS preflight OPTIONS requests — must be first
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 // Static resources & SPA
                 .requestMatchers("/", "/index.html", "/assets/**", "/favicon.ico", "/*.ico", "/*.png", "/*.svg", "/*.js", "/*.css").permitAll()
                 // Public APIs (Không cần token)
