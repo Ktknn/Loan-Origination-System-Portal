@@ -7,7 +7,8 @@
  *  - On app startup: call initAuth() to silently restore session
  */
 
-const API_BASE = (import.meta.env.VITE_API_URL ?? '') + '/api/v1';
+const VITE_APP_URL = import.meta.env.VITE_APP_URL ?? '';
+const API_BASE = `${VITE_APP_URL}/api/v1`;
 
 // ─── In-Memory Token Store ──────────────────────────────────
 // Access token lives only in JS memory — safe from XSS, but lost on page reload.
@@ -184,7 +185,7 @@ export async function initAuth(): Promise<AuthUser | null> {
     try {
       const saved = localStorage.getItem('user');
       if (saved) return JSON.parse(saved) as AuthUser;
-    } catch {}
+    } catch { }
 
     return null;
   } catch {
