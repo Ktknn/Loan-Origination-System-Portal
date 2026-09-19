@@ -21,6 +21,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+            // CORS is handled by CorsFilter bean (Ordered.HIGHEST_PRECEDENCE) in CorsConfig
             .csrf(csrf -> csrf.disable())
             .cors(Customizer.withDefaults())
             .sessionManagement(session -> session.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
@@ -34,6 +35,7 @@ public class SecurityConfig {
                 })
             )
             .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 // Static resources & SPA
                 .requestMatchers("/", "/index.html", "/assets/**", "/favicon.ico", "/*.ico", "/*.png", "/*.svg", "/*.js", "/*.css").permitAll()
                 // Public APIs (Không cần token)
